@@ -22,18 +22,38 @@ const addTask = async (req, res) => {
 
 const viewTasks = async (req, res) => {
   try {
-    // getting sorting option from the query params
+    // sorting option
     const sortField = req.query.sort || "id";
     const sortOrder = req.query.order === "desc" ? -1 : 1;
 
-    // get pagination option
+    // pagination option
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 3;
     const skip = (page - 1) * limit;
 
+    // Searching with exact word
+    const searchWord = req.query.search;
+
+    let searchRule = {};
+    if (searchWord) {
+      searchRule = { title: { $regex: searchWord, $options: "i" } };
+    }
+
+    // Filtering
+    const completeRule = req.query.completed;
+    const ownerRule = req.query.owner;
+    let filterRule = {};
+    completeRule === "true"
+      ? (filterRule.completed = true)
+      : (filterRule.completed = false);
+    if (ownerRule) filterRule.owner = ownerRule;
+
+    //Merging Searching and Filtering rule
+    const allRule = { ...filterRule, ...searchRule };
+
     // counting total task
     const totalTask = await Task.countDocuments();
-    const tasks = await Task.find()
+    const tasks = await Task.find(allRule)
       .sort({ [sortField]: sortOrder })
       .skip(skip)
       .limit(limit);

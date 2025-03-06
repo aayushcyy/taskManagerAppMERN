@@ -3,8 +3,10 @@ import { errorMiddleware } from "./src/middlewares/error.middleware.js";
 import { welcome } from "./src/controllers/task.controllers.js";
 import { logRequest } from "./src/middlewares/logRequest.middlewares.js";
 import myRouter from "./src/routes/taskRoutes.js";
+import authRouter from "./src/routes/AuthRoutes.js";
 import "dotenv/config";
 import connectDB from "./src/config/db.js";
+import AuthMiddleware from "./src/middlewares/Auth.middleware.js";
 
 const app = express();
 app.use(express.json());
@@ -13,8 +15,12 @@ app.use(errorMiddleware);
 
 //logs every request Middleware
 app.use(logRequest);
+// app.use(AuthMiddleware);
 
+//task router
 app.use("/tasks", myRouter);
+//auth router
+app.use("/auth", authRouter);
 app.get("/", welcome);
 
 connectDB();

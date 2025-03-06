@@ -6,7 +6,7 @@ import myRouter from "./src/routes/taskRoutes.js";
 import authRouter from "./src/routes/AuthRoutes.js";
 import "dotenv/config";
 import connectDB from "./src/config/db.js";
-import AuthMiddleware from "./src/middlewares/Auth.middleware.js";
+// import AuthMiddleware from "./src/middlewares/Auth.middleware.js";
 
 const app = express();
 app.use(express.json());

@@ -1,4 +1,3 @@
-import express from "express";
 import bcrypt from "bcryptjs";
 import { User } from "../models/User.models.js";
 import jwt from "jsonwebtoken";
@@ -22,7 +21,7 @@ const signupUser = async (req, res) => {
     user = new User({
       name: name,
       email: email,
-      password: password,
+      password: hashPass,
       role: "user",
     });
     await user.save();
@@ -35,14 +34,14 @@ const signupUser = async (req, res) => {
 
     res.status(201).json({ message: "user created successful", token: token });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    res.status(500).json({ msg: "error signing up" });
   }
 };
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user)
       return res
         .status(400)
@@ -56,9 +55,9 @@ const loginUser = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ msg: `Welcome back ${user.name}!` });
+    res.status(200).json({ msg: `Welcome back ${user.name}!`, token });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    res.status(500).json({ message: "Error logging in" });
   }
 };
 

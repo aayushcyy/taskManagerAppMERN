@@ -1,9 +1,3 @@
-/*id string pk
-name string
-email string
-password string
-createdAt date
-updatedAt date*/
 import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(

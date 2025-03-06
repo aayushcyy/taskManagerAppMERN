@@ -6,6 +6,11 @@ const signupUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: `Credentials are undefined! name: ${name}, email: ${email}, password: ${password}`,
+      });
+    }
     // Check if user exists
     let user = await User.findOne({ email });
     if (user)

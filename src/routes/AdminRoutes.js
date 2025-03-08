@@ -14,6 +14,6 @@ router.put("/promote", promoteUser);
 router.get("/get-users", getUsers);
 
 // Delete a user
-router.delete("delete-user", deleteUser);
+router.delete("/delete-user", deleteUser);
 
 export default router;

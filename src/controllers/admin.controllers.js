@@ -1,25 +1,24 @@
-import express from "express";
 import { User } from "../models/User.models.js";
 
 const promoteUser = async (req, res) => {
-  const { email } = req.body;
-  if (!email)
-    return res.status(400).json({ msg: "Email of the user is unavailable!" });
+  const email = req.body.email;
+  if (!email) return res.status(400).json({ msg: "Please provide the email" });
 
   try {
     const promotedUser = await User.findOneAndUpdate(
       { email: email },
-      { $set: { [role]: "Admin" } },
+      { $set: { role: "Admin" } },
       { new: true }
     );
 
-    if (!promotedUser) throw new Error("User not found!");
+    if (!promotedUser) return res.status(404).json({ msg: "User not found!" });
+
     res.status(200).json({
       msg: "User promoted to Admin Successful!",
       userDetails: promotedUser,
     });
   } catch (error) {
-    res.status(400).json({ msg: "Error updating the document" });
+    res.status(500).json({ msg: error.message });
   }
 };
 

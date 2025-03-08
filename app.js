@@ -3,6 +3,7 @@ import { errorMiddleware } from "./src/middlewares/error.middleware.js";
 import { welcome } from "./src/controllers/task.controllers.js";
 import { logRequest } from "./src/middlewares/logRequest.middlewares.js";
 import myRouter from "./src/routes/taskRoutes.js";
+import adminRouter from "./src/routes/AdminRoutes.js";
 import authRouter from "./src/routes/AuthRoutes.js";
 import "dotenv/config";
 import connectDB from "./src/config/db.js";
@@ -19,8 +20,13 @@ app.use(logRequest);
 
 //task router
 app.use("/tasks", myRouter);
+
 //auth router
 app.use("/auth", authRouter);
+
+// route for admin
+app.use("/admin", adminRouter);
+
 app.get("/", welcome);
 
 connectDB();

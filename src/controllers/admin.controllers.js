@@ -1,5 +1,6 @@
 import express from "express";
 import { User } from "../models/User.models.js";
+import { error } from "winston";
 
 const promoteUser = async (req, res) => {
   const { email } = req.body;
@@ -33,6 +34,22 @@ const getUsers = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {};
+const deleteUser = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: "email is not defined!" });
+
+  try {
+    const deletedUser = await User.findOneAndDelete({ email });
+    if (!deletedUser)
+      res.status(500).json({ error: "user not found with the given email" });
+
+    res.status(200).json({
+      msg: "User Deleted Successful!",
+      deleteUser,
+    });
+  } catch (error) {
+    res.status(400).json({ error: "Error deleting the user!" });
+  }
+};
 
 export { promoteUser, getUsers, deleteUser };

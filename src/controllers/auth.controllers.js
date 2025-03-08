@@ -27,7 +27,7 @@ const signupUser = async (req, res) => {
       name: name,
       email: email,
       password: hashPass,
-      role: role,
+      role: role.toLowerCase(),
     });
     await user.save();
 

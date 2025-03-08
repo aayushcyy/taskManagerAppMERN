@@ -8,7 +8,7 @@ const AdmintMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    if (!req.user.role === "admin" || !req.user.role === "Admin") {
+    if (!req.user.role.toLowerCase() === process.env.ADMIN_ROLE) {
       res
         .status(401)
         .json({ msg: "Action denied! This action is only allowed to users." });

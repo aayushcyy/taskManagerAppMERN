@@ -24,8 +24,45 @@ const promoteUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const allUsers = await User.find();
-    if (!allUsers) res.status(500).json({ msg: "Can't get the users!" });
+    // sorting users
+    const sortField = req.query.sort || "name";
+    const sortOrder = req.query.order === "desc" ? -1 : 1;
+
+    // pagination option
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    // Searching
+    const searchUser = req.query.search;
+
+    let searchRule = {};
+    if (searchUser) {
+      searchRule = { name: new RegExp(searchUser, "i") };
+    }
+
+    // Filtering
+    const usersRule = req.query.filterBy;
+    let filterRule = {};
+    if (usersRule === "user" || usersRule === "admin") {
+      filterRule.role = usersRule;
+    }
+
+    // Merging rules
+    const allRule = { ...filterRule, ...searchRule };
+
+    // couting all the users
+    const totalUsers = await User.countDocuments(allRule);
+
+    const allUsers = await User.find(allRule)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit);
+
+    if (allUsers.length === 0) {
+      return res.status(404).json({ msg: "No users found!" });
+    }
+
     res.status(200).send(allUsers);
   } catch (error) {
     res.status(500).json({ msg: "Error getting all the users!" });
@@ -39,7 +76,7 @@ const deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findOneAndDelete({ email });
     if (!deletedUser)
-      res.status(500).json({ error: "user not found with the given email" });
+      res.status(404).json({ error: "user not found with the given email" });
 
     res.status(200).json({
       msg: "User Deleted Successful!",

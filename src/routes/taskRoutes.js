@@ -14,7 +14,7 @@ router.post("/add", AuthMiddleware, addTask);
 
 // Route for viewing tasks
 router.get("/view", AuthMiddleware, viewTasks);
-
+  
 // Route for updating a task
 router.put("/update/:id", AuthMiddleware, updateTask);
 

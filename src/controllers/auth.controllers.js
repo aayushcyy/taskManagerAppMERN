@@ -3,10 +3,10 @@ import { User } from "../models/User.models.js";
 import jwt from "jsonwebtoken";
 
 const signupUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       return res.status(400).json({
         message: `Credentials are undefined! name: ${name}, email: ${email}, password: ${password}`,
       });
@@ -27,7 +27,7 @@ const signupUser = async (req, res) => {
       name: name,
       email: email,
       password: hashPass,
-      role: "user",
+      role: role,
     });
     await user.save();
 

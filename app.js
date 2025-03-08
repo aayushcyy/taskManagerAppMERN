@@ -7,6 +7,7 @@ import adminRouter from "./src/routes/AdminRoutes.js";
 import authRouter from "./src/routes/AuthRoutes.js";
 import "dotenv/config";
 import connectDB from "./src/config/db.js";
+import AdmintMiddleware from "./src/middlewares/Admin.middleware.js";
 // import AuthMiddleware from "./src/middlewares/Auth.middleware.js";
 
 const app = express();
@@ -25,7 +26,7 @@ app.use("/tasks", myRouter);
 app.use("/auth", authRouter);
 
 // route for admin
-app.use("/admin", adminRouter);
+app.use("/admin", AdmintMiddleware, adminRouter);
 
 app.get("/", welcome);
 

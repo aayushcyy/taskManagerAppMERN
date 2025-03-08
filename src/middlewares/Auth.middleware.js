@@ -10,7 +10,7 @@ const AuthMiddleware = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ msg: "Token expired! Please login." });
+    res.status(401).json({ msg: error });
   }
 };
 

@@ -1,6 +1,5 @@
 import express from "express";
 import { User } from "../models/User.models.js";
-import { error } from "winston";
 
 const promoteUser = async (req, res) => {
   const { email } = req.body;

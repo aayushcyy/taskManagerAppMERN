@@ -11,7 +11,7 @@ const router = express.Router();
 router.put("/promote", promoteUser);
 
 // Get All the users
-router.get("/get-user", getUsers);
+router.get("/get-users", getUsers);
 
 // Delete a user
 router.delete("delete-user", deleteUser);

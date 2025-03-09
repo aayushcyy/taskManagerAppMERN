@@ -8,6 +8,7 @@ import authRouter from "./src/routes/AuthRoutes.js";
 import "dotenv/config";
 import connectDB from "./src/config/db.js";
 import AdmintMiddleware from "./src/middlewares/Admin.middleware.js";
+import upload from "./src/middlewares/multer.middlewares.js";
 // import AuthMiddleware from "./src/middlewares/Auth.middleware.js";
 
 const app = express();
@@ -23,7 +24,7 @@ app.use(logRequest);
 app.use("/tasks", myRouter);
 
 //auth router
-app.use("/auth", authRouter);
+app.use("/auth", upload.single("profilePic"), authRouter);
 
 // route for admin
 app.use("/admin", AdmintMiddleware, adminRouter);

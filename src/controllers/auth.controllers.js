@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { User } from "../models/User.models.js";
 import jwt from "jsonwebtoken";
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 const signupUser = async (req, res) => {
   const { name, email, password, role } = req.body;
@@ -22,12 +23,25 @@ const signupUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPass = await bcrypt.hash(password, salt);
 
+    let profilePicURL = null;
+    if (req.file) {
+      const uploadResult = uploadOnCloudinary(req.file.path);
+      if (uploadResult) {
+        profilePicURL = uploadResult.url;
+      } else {
+        return res
+          .status(500)
+          .json({ message: "Failed to upload profile pic!" });
+      }
+    }
+
     // Create a new User
     user = new User({
       name: name,
       email: email,
       password: hashPass,
       role: role.toLowerCase(),
+      profilePic: profilePicURL,
     });
     await user.save();
 

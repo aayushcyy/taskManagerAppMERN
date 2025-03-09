@@ -47,7 +47,7 @@ const viewTasks = async (req, res) => {
     if (completeRule === "true") filterRule.completed = true;
     if (completeRule === "false") filterRule.completed = false;
 
-    if (req.user.role !== "admin") {
+    if (req.user.role !== "admin" || req.user.role !== "Admin") {
       filterRule.owner = ownerRule;
     }
 

@@ -24,7 +24,19 @@ app.use(logRequest);
 app.use("/tasks", myRouter);
 
 //auth router
-app.use("/auth", upload.single("profilePic"), authRouter);
+app.use(
+  "/auth",
+  (req, res, next) => {
+    console.log("Before Multer - Body:", req.body, "File:", req.file);
+    next();
+  },
+  upload.single("profilePic"),
+  (req, res, next) => {
+    console.log("After Multer - Body:", req.body, "File:", req.file);
+    next();
+  },
+  authRouter
+);
 
 // route for admin
 app.use("/admin", AdmintMiddleware, adminRouter);

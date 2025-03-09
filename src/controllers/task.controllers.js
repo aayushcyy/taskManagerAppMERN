@@ -7,7 +7,7 @@ const addTask = async (req, res) => {
     const newTask = new Task({
       id: req.body.id,
       title: req.body.title,
-      owner: req.body.owner,
+      owner: req.user.name,
       complete: false,
     });
     await newTask.save();
@@ -41,18 +41,21 @@ const viewTasks = async (req, res) => {
 
     // Filtering
     const completeRule = req.query.completed;
-    const ownerRule = req.query.owner;
+    const ownerRule = req.user.name;
     let filterRule = {};
-    completeRule === "true"
-      ? (filterRule.completed = true)
-      : (filterRule.completed = false);
-    if (ownerRule) filterRule.owner = ownerRule;
+
+    if (completeRule === "true") filterRule.completed = true;
+    if (completeRule === "false") filterRule.completed = false;
+
+    if (req.user.role !== "admin") {
+      filterRule.owner = ownerRule;
+    }
 
     //Merging Searching and Filtering rule
     const allRule = { ...filterRule, ...searchRule };
 
     // counting total task
-    const totalTask = await Task.countDocuments();
+    const totalTask = await Task.countDocuments(allRule);
     const tasks = await Task.find(allRule)
       .sort({ [sortField]: sortOrder })
       .skip(skip)

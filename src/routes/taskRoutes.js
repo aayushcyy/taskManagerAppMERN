@@ -4,8 +4,8 @@ import {
   deleteATask,
   updateTask,
   viewTasks,
-} from "../controllers/task.controllers.js";
-import AuthMiddleware from "../middlewares/Auth.middleware.js";
+} from "../../src/controllers/task.controllers.js";
+import AuthMiddleware from "../../src/middlewares/Auth.middleware.js";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post("/add", AuthMiddleware, addTask);
 
 // Route for viewing tasks
 router.get("/view", AuthMiddleware, viewTasks);
-  
+
 // Route for updating a task
 router.put("/update/:id", AuthMiddleware, updateTask);
 

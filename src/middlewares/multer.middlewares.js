@@ -7,13 +7,12 @@ const storage = multer.diskStorage({
     cb(null, "./public/temp");
   },
   filename: function (req, file, cb) {
+    console.log("Multer file:", file);
     const uniqueSuffix =
       dayjs().format("DMMMYY") + "-" + dayjs().format("Hmmss");
-    console.log("Multer file:", file);
     cb(null, file.originalname + "-" + uniqueSuffix);
   },
 });
 
 const upload = multer({ storage: storage });
-
 export default upload;
